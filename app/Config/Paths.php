@@ -87,4 +87,19 @@ class Paths
      * value - the directory should not be publicly accessible.
      */
     public string $envDirectory = __DIR__ . '/../../';
+
+    public function __construct()
+    {
+        if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL']) || getenv('VERCEL')) {
+            $tmpWritable = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'ci4_writable';
+            if (!is_dir($tmpWritable)) {
+                @mkdir($tmpWritable, 0777, true);
+                @mkdir($tmpWritable . DIRECTORY_SEPARATOR . 'cache', 0777, true);
+                @mkdir($tmpWritable . DIRECTORY_SEPARATOR . 'logs', 0777, true);
+                @mkdir($tmpWritable . DIRECTORY_SEPARATOR . 'session', 0777, true);
+                @mkdir($tmpWritable . DIRECTORY_SEPARATOR . 'uploads', 0777, true);
+            }
+            $this->writableDirectory = $tmpWritable;
+        }
+    }
 }
