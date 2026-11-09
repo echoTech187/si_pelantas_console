@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: si-pelantas-console
+    runtime: docker
+    region: singapore
+    plan: free
+    envVars:
+      - key: CI_ENVIRONMENT
+        value: production
+      - key: database.default.hostname
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: database.default.database
+        value: sipelantas_mojokerto
+      - key: database.default.username
+        value: 3g1AEyN52aykhaE.root
+      - key: database.default.password
+        value: KPbxjvXA2Rsy7oev
+      - key: database.default.DBDriver
+        value: MySQLi
+      - key: database.default.port
+        value: "4000"
+      - key: database.default.charset
+        value: utf8mb4
+      - key: database.default.DBCollat
+        value: utf8mb4_general_ci

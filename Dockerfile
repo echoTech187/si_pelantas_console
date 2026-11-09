@@ -41,3 +41,4 @@ RUN mkdir -p /var/www/html/writable/cache /var/www/html/writable/logs /var/www/h
 EXPOSE 80
 
 CMD ["apache2-foreground"]
+
