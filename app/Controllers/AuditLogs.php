@@ -148,14 +148,14 @@ class AuditLogs extends BaseController
             ->select('tv.*, s.name AS school_name, s.education_level,
                       st.full_name AS student_name, st.class_grade, st.class_name,
                       pa.full_name AS officer_name, pa.rank_title, pa.nrp,
-                      (SELECT STRING_AGG(vmt.title, \', \') 
+                      (SELECT GROUP_CONCAT(vmt.title SEPARATOR \', \') 
                        FROM traffic_violation_items tvi 
                        JOIN violation_master_types vmt ON vmt.id = tvi.violation_type_id 
                        WHERE tvi.violation_id = tv.id) AS violation_items,
                       (SELECT COALESCE(SUM(vmt.max_fine_idr), 0) 
                        FROM traffic_violation_items tvi 
                        JOIN violation_master_types vmt ON vmt.id = tvi.violation_type_id 
-                       WHERE tvi.violation_id = tv.id) AS total_fine_idr')
+                       WHERE tvi.violation_id = tv.id) AS total_fine_idr', false)
             ->join('schools s', 's.id = tv.school_id', 'left')
             ->join('students st', 'st.id = tv.student_id', 'left')
             ->join('police_accounts pa', 'pa.id = tv.polantas_account_id', 'left')
@@ -200,14 +200,14 @@ class AuditLogs extends BaseController
                 $builder->select('traffic_violations.*, s.name AS school_name, s.education_level,
                                   st.full_name AS student_name, st.class_grade, st.class_name,
                                   pa.full_name AS officer_name, pa.rank_title, pa.nrp,
-                                  (SELECT STRING_AGG(vmt.title, \', \') 
+                                  (SELECT GROUP_CONCAT(vmt.title SEPARATOR \', \') 
                                    FROM traffic_violation_items tvi 
                                    JOIN violation_master_types vmt ON vmt.id = tvi.violation_type_id 
                                    WHERE tvi.violation_id = traffic_violations.id) AS violation_items,
                                   (SELECT COALESCE(SUM(vmt.max_fine_idr), 0) 
                                    FROM traffic_violation_items tvi 
                                    JOIN violation_master_types vmt ON vmt.id = tvi.violation_type_id 
-                                   WHERE tvi.violation_id = traffic_violations.id) AS total_fine_idr')
+                                   WHERE tvi.violation_id = traffic_violations.id) AS total_fine_idr', false)
                         ->join('schools s', 's.id = traffic_violations.school_id', 'left')
                         ->join('students st', 'st.id = traffic_violations.student_id', 'left')
                         ->join('police_accounts pa', 'pa.id = traffic_violations.polantas_account_id', 'left');

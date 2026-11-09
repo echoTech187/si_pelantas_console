@@ -36,7 +36,7 @@ class Dashboard extends BaseController
 
         // Average Feedback Rating from BK teachers
         $avgRatingRow = $db->table('kamsel_counseling_feedbacks')
-            ->select('ROUND(AVG(rating_stars)::numeric, 1) AS avg_rating, COUNT(*) AS total_reviews')
+            ->select('ROUND(AVG(rating_stars), 1) AS avg_rating, COUNT(*) AS total_reviews')
             ->get()
             ->getRowArray();
         $avgRating    = $avgRatingRow['avg_rating'] ?? 5.0;
