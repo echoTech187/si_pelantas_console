@@ -40,7 +40,23 @@ class App extends BaseConfig
      * something else. If you have configured your web server to remove this file
      * from your site URIs, set this variable to an empty string.
      */
-    public string $indexPage = '/';
+    public string $indexPage = '';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Dynamically detect baseURL from active HTTP/HTTPS request host (Vercel, custom domain, or localhost)
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $isHttps = (
+                (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+                (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+            );
+            $scheme = $isHttps ? 'https://' : 'http://';
+            $this->baseURL = $scheme . $_SERVER['HTTP_HOST'] . '/';
+        }
+    }
 
     /**
      * --------------------------------------------------------------------------
