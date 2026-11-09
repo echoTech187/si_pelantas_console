@@ -26,15 +26,6 @@
     }
   ],
   "env": {
-    "CI_ENVIRONMENT": "production",
-    "database.default.hostname": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-    "database.default.database": "sipelantas_mojokerto",
-    "database.default.username": "3g1AEyN52aykhaE.root",
-    "database.default.password": "KPbxjvXA2Rsy7oev",
-    "database.default.DBDriver": "MySQLi",
-    "database.default.port": "4000",
-    "database.default.charset": "utf8mb4",
-    "database.default.DBCollat": "utf8mb4_general_ci"
+    "CI_ENVIRONMENT": "production"
   }
 }
-
