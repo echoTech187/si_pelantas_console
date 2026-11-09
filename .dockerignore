@@ -1,0 +1,11 @@
+.git
+.github
+vendor
+writable/cache/*
+writable/logs/*
+writable/session/*
+.env
+tests
+phpunit.dist.xml
+README.md
+LICENSE
