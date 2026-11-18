@@ -204,7 +204,7 @@ class BkAccounts extends BaseController
         try {
             // Jika akun baru diset sebagai PIC Utama, demote PIC lama pada sekolah tersebut
             if ($isPrimary) {
-                $this->bkModel->where('school_id', $schoolId)->set(['is_primary_pic' => 'f'])->update();
+                $this->bkModel->where('school_id', $schoolId)->set(['is_primary_pic' => 0])->update();
             }
 
             $insertData = [
@@ -215,8 +215,8 @@ class BkAccounts extends BaseController
                 'password_hash'  => $passwordHash,
                 'full_name'      => trim($this->request->getPost('full_name')),
                 'phone_wa'       => $phone,
-                'is_primary_pic' => $isPrimary ? 't' : 'f',
-                'is_active'      => $this->request->getPost('is_active') ? 't' : 'f',
+                'is_primary_pic' => $isPrimary ? 1 : 0,
+                'is_active'      => $this->request->getPost('is_active') ? 1 : 0,
             ];
 
             $this->bkModel->insert($insertData);
@@ -293,7 +293,7 @@ class BkAccounts extends BaseController
         }
 
         $schoolId  = $this->request->getPost('school_id');
-        $isPrimary = $this->request->getPost('is_primary_pic') ? 't' : 'f';
+        $isPrimary = $this->request->getPost('is_primary_pic') ? 1 : 0;
 
         $updateData = [
             'school_id'      => $schoolId,
@@ -301,7 +301,7 @@ class BkAccounts extends BaseController
             'full_name'      => trim($this->request->getPost('full_name')),
             'phone_wa'       => $phone,
             'is_primary_pic' => $isPrimary,
-            'is_active'      => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'      => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         if (!empty($newPassword)) {
@@ -312,9 +312,9 @@ class BkAccounts extends BaseController
         $db->transBegin();
 
         try {
-            if ($isPrimary === 't') {
+            if ($isPrimary === 1) {
                 // Pastikan yang lain bukan primary
-                $this->bkModel->where('school_id', $schoolId)->where('id !=', $id)->set(['is_primary_pic' => 'f'])->update();
+                $this->bkModel->where('school_id', $schoolId)->where('id !=', $id)->set(['is_primary_pic' => 0])->update();
             }
 
             $this->bkModel->update($id, $updateData);
@@ -342,7 +342,7 @@ class BkAccounts extends BaseController
 
         if ($feedbacksCount > 0) {
             // Lindungi integritas log feedback penilaian Kamsel
-            $this->bkModel->update($id, ['is_active' => false]);
+            $this->bkModel->update($id, ['is_active' => 0]);
             return redirect()->to('/bk-accounts')->with('success', 'Guru BK ' . esc($account['full_name']) . ' memiliki riwayat feedback evaluasi. Status akun dinonaktifkan.');
         }
 
@@ -366,7 +366,7 @@ class BkAccounts extends BaseController
 
         $currentStatus = to_bool($account['is_active']);
         $newStatus     = !$currentStatus;
-        $this->bkModel->update($id, ['is_active' => $newStatus ? 't' : 'f']);
+        $this->bkModel->update($id, ['is_active' => $newStatus ? 1 : 0]);
 
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->to('/bk-accounts')->with('success', 'Akun Guru BK ' . esc($account['full_name']) . " berhasil $statusText.");
@@ -389,12 +389,12 @@ class BkAccounts extends BaseController
             $isCurrentlyPrimary = to_bool($account['is_primary_pic']);
             if ($isCurrentlyPrimary) {
                 // Lepas PIC utama
-                $this->bkModel->update($id, ['is_primary_pic' => 'f']);
+                $this->bkModel->update($id, ['is_primary_pic' => 0]);
                 $msg = esc($account['full_name']) . ' diubah menjadi anggota tim BK.';
             } else {
-                // Reset semua PIC pada sekolah tersebut ke 'f', lalu set akun ini ke 't'
-                $this->bkModel->where('school_id', $account['school_id'])->set(['is_primary_pic' => 'f'])->update();
-                $this->bkModel->update($id, ['is_primary_pic' => 't']);
+                // Reset semua PIC pada sekolah tersebut ke 0, lalu set akun ini ke 1
+                $this->bkModel->where('school_id', $account['school_id'])->set(['is_primary_pic' => 0])->update();
+                $this->bkModel->update($id, ['is_primary_pic' => 1]);
                 $msg = esc($account['full_name']) . ' berhasil ditetapkan sebagai Koordinator PIC Utama BK sekolah.';
             }
 

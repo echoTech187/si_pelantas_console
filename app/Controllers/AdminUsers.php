@@ -171,7 +171,7 @@ class AdminUsers extends BaseController
             'full_name'     => trim($this->request->getPost('full_name')),
             'email'         => trim($this->request->getPost('email')) ?: null,
             'role'          => $this->request->getPost('role'),
-            'is_active'     => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'     => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         try {
@@ -240,7 +240,7 @@ class AdminUsers extends BaseController
             'full_name' => trim($this->request->getPost('full_name')),
             'email'     => trim($this->request->getPost('email')) ?: null,
             'role'      => $this->request->getPost('role'),
-            'is_active' => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active' => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         // Jangan izinkan admin yang sedang login menonaktifkan dirinya sendiri
@@ -319,7 +319,7 @@ class AdminUsers extends BaseController
 
         $currentStatus = to_bool($admin['is_active']);
         $newStatus     = !$currentStatus;
-        $this->adminModel->update($id, ['is_active' => $newStatus ? 't' : 'f']);
+        $this->adminModel->update($id, ['is_active' => $newStatus ? 1 : 0]);
 
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->to('/admin-users')->with('success', 'Akun administrator ' . esc($admin['full_name']) . " berhasil $statusText.");

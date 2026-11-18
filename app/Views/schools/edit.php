@@ -108,7 +108,7 @@
                     <!-- Status Aktif -->
                     <div class="flex items-center pt-2">
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="is_active" value="1" class="sr-only peer" <?= to_bool($school['is_active']) ? 'checked' : '' ?>>
+                            <input type="checkbox" name="is_active" value="1" class="sr-only peer" <?= (!empty($errors) ? !empty(old('is_active')) : to_bool($school['is_active'])) ? 'checked' : '' ?>>
                             <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                             <span class="ml-3 text-xs font-bold text-slate-700">Status Sekolah Aktif</span>
                         </label>

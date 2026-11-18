@@ -196,7 +196,7 @@ class Schools extends BaseController
             'district_id'     => $this->request->getPost('district_id'),
             'address'         => trim($this->request->getPost('address')),
             'official_phone'  => trim($this->request->getPost('official_phone')),
-            'is_active'       => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'       => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         $db = \Config\Database::connect();
@@ -287,7 +287,7 @@ class Schools extends BaseController
             'district_id'     => $this->request->getPost('district_id'),
             'address'         => trim($this->request->getPost('address')),
             'official_phone'  => trim($this->request->getPost('official_phone')),
-            'is_active'       => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'       => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         try {
@@ -315,7 +315,7 @@ class Schools extends BaseController
 
         if ($violationCount > 0 || $inspectionCount > 0 || $bkCount > 0) {
             // Lindungi integritas audit: Nonaktifkan daripada hard delete
-            $this->schoolModel->update($id, ['is_active' => false]);
+            $this->schoolModel->update($id, ['is_active' => 0]);
             return redirect()->to('/schools')->with('success', 'Sekolah ' . esc($school['name']) . ' memiliki riwayat pelanggaran/kunjungan/akun BK. Status otomatis dinonaktifkan.');
         }
 
@@ -341,7 +341,7 @@ class Schools extends BaseController
 
         $currentStatus = to_bool($school['is_active']);
         $newStatus     = !$currentStatus;
-        $this->schoolModel->update($id, ['is_active' => $newStatus ? 't' : 'f']);
+        $this->schoolModel->update($id, ['is_active' => $newStatus ? 1 : 0]);
 
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->to('/schools')->with('success', 'Sekolah ' . esc($school['name']) . " berhasil $statusText.");

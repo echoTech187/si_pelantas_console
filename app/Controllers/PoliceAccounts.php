@@ -169,6 +169,14 @@ class PoliceAccounts extends BaseController
             $phone = '62' . substr($phone, 1);
         }
 
+        $role     = $this->request->getPost('role');
+        $division = $this->request->getPost('division');
+        if ($role === 'UNIT_KAMSEL') {
+            $division = 'UNIT_KAMSEL';
+        } elseif ($division === 'UNIT_KAMSEL') {
+            $division = 'GAKKUM_LANTAS';
+        }
+
         $insertData = [
             'id'            => uuid_v4(),
             'nrp'           => trim($this->request->getPost('nrp')),
@@ -176,11 +184,11 @@ class PoliceAccounts extends BaseController
             'password_hash' => $passwordHash,
             'full_name'     => trim($this->request->getPost('full_name')),
             'rank_title'    => trim($this->request->getPost('rank_title')),
-            'role'          => $this->request->getPost('role'),
-            'division'      => $this->request->getPost('division'),
+            'role'          => $role,
+            'division'      => $division,
             'sector_area'   => trim($this->request->getPost('sector_area')) ?: 'Polres Mojokerto',
             'phone_wa'      => $phone,
-            'is_active'     => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'     => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         try {
@@ -247,14 +255,22 @@ class PoliceAccounts extends BaseController
             $phone = '62' . substr($phone, 1);
         }
 
+        $role     = $this->request->getPost('role');
+        $division = $this->request->getPost('division');
+        if ($role === 'UNIT_KAMSEL') {
+            $division = 'UNIT_KAMSEL';
+        } elseif ($division === 'UNIT_KAMSEL') {
+            $division = 'GAKKUM_LANTAS';
+        }
+
         $updateData = [
             'full_name'   => trim($this->request->getPost('full_name')),
             'rank_title'  => trim($this->request->getPost('rank_title')),
-            'role'        => $this->request->getPost('role'),
-            'division'    => $this->request->getPost('division'),
+            'role'        => $role,
+            'division'      => $division,
             'sector_area' => trim($this->request->getPost('sector_area')) ?: 'Polres Mojokerto',
             'phone_wa'    => $phone,
-            'is_active'   => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'   => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         if (!empty($newPassword)) {
@@ -285,7 +301,7 @@ class PoliceAccounts extends BaseController
 
         if ($hasViolations > 0 || $hasInspections > 0) {
             // Lindungi integritas audit log: Nonaktifkan daripada hard delete
-            $this->policeModel->update($id, ['is_active' => false]);
+            $this->policeModel->update($id, ['is_active' => 0]);
             return redirect()->to('/police-accounts')->with('success', 'Akun personel ' . esc($account['full_name']) . ' memiliki riwayat operasional, status otomatis dinonaktifkan.');
         }
 
@@ -309,7 +325,7 @@ class PoliceAccounts extends BaseController
 
         $currentStatus = to_bool($account['is_active']);
         $newStatus     = !$currentStatus;
-        $this->policeModel->update($id, ['is_active' => $newStatus ? 't' : 'f']);
+        $this->policeModel->update($id, ['is_active' => $newStatus ? 1 : 0]);
 
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->to('/police-accounts')->with('success', 'Akun ' . esc($account['full_name']) . " berhasil $statusText.");

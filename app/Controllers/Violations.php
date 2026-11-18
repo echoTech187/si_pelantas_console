@@ -158,7 +158,7 @@ class Violations extends BaseController
             'uu_llaj_article' => trim($this->request->getPost('uu_llaj_article')),
             'severity_weight' => (int)$this->request->getPost('severity_weight'),
             'max_fine_idr'    => (float)$this->request->getPost('max_fine_idr'),
-            'is_active'       => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'       => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         try {
@@ -224,7 +224,7 @@ class Violations extends BaseController
             'uu_llaj_article' => trim($this->request->getPost('uu_llaj_article')),
             'severity_weight' => (int)$this->request->getPost('severity_weight'),
             'max_fine_idr'    => (float)$this->request->getPost('max_fine_idr'),
-            'is_active'       => $this->request->getPost('is_active') ? 't' : 'f',
+            'is_active'       => $this->request->getPost('is_active') ? 1 : 0,
         ];
 
         try {
@@ -250,7 +250,7 @@ class Violations extends BaseController
 
         if ($usedCount > 0) {
             // Lindungi riwayat tilang yang pernah diterbitkan
-            $this->vModel->update($id, ['is_active' => false]);
+            $this->vModel->update($id, ['is_active' => 0]);
             return redirect()->to('/violations')->with('success', 'Pasal ' . esc($violation['title']) . ' sudah pernah digunakan pada riwayat penindakan tilang. Status dinonaktifkan.');
         }
 
@@ -274,7 +274,7 @@ class Violations extends BaseController
 
         $currentStatus = to_bool($violation['is_active']);
         $newStatus     = !$currentStatus;
-        $this->vModel->update($id, ['is_active' => $newStatus ? 't' : 'f']);
+        $this->vModel->update($id, ['is_active' => $newStatus ? 1 : 0]);
 
         $statusText = $newStatus ? 'diaktifkan' : 'dinonaktifkan';
         return redirect()->to('/violations')->with('success', 'Pasal ' . esc($violation['code']) . " berhasil $statusText.");
